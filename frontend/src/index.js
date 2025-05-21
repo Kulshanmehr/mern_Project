@@ -5,19 +5,20 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import Login from "../src/pages/Login.jsx";
 import Signup from "../src/pages/Signup.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import DashboardLayout from "./components/DashboardLayout";
 import DashboardHome from "./pages/Dashboard/DashboardHome";
 import Services from "./pages/Dashboard/Services";
 import Projects from "./pages/Dashboard/Products.jsx";
-
+import Product from "./pages/Product.jsx";
+import ProductDetails from "./pages/ProductDetails.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/" element={<App />} />
-        <Route path="dashboard" element={<DashboardLayout />}>
+        <Route path="/products" element={<Product />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="dashboard">
           <Route index element={<DashboardHome />} />
           <Route path="services" element={<Services />} />
           <Route path="projects" element={<Projects />} />
