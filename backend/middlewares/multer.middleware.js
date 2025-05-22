@@ -2,17 +2,32 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Ensure directory exists
 const ensureDirExists = (dir) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 };
 
-// Storage config for product images
+const baseUploadPath = path.join(process.cwd(), "uploads");
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(process.cwd(), "uploads/product");
+    let folderName = "others";
+
+    if (
+      file.fieldname === "productImages" ||
+      file.fieldname === "product_thumb_image" ||
+      file.fieldname === "productBanner"
+    ) {
+      folderName = "product";
+    } else if (
+      file.fieldname === "category_thumb_image" ||
+      file.fieldname === "categoryBanner"
+    ) {
+      folderName = "category";
+    }
+
+    const uploadPath = path.join(baseUploadPath, folderName);
     ensureDirExists(uploadPath);
     cb(null, uploadPath);
   },

@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 router.post(
   "/addProduct",
   upload.fields([
-    { name: "thumb_image", maxCount: 1 },
+    { name: "product_thumb_image", maxCount: 1 },
     { name: "productBanner", maxCount: 1 },
   ]),
   AddProduct,

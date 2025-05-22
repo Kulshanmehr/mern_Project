@@ -26,7 +26,7 @@ const AddProduct = async (req, res) => {
     }
 
     // Extract uploaded files
-    const thumb_image = req?.files?.thumb_image?.[0];
+    const thumb_image = req?.files?.product_thumb_image?.[0];
     const productBanner = req?.files?.productBanner?.[0];
     const productImages = req?.files?.productImages || [];
 
@@ -55,7 +55,7 @@ const AddProduct = async (req, res) => {
       productPrice,
       productCost,
       productCategory,
-      thumb_image: thumb_image.filename,
+      product_thumb_image: thumb_image.filename,
       productBanner: productBanner.filename,
       productImages: productImages.map((img) => img.filename),
     });

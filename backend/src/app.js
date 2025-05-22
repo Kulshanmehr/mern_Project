@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import UserRouter from "../routes/user.routes.js";
 import ProductRouter from "../routes/product.routes.js";
+import CategoryRouter from "../routes/category.routes.js";
 const app = express();
 
 app.use(
@@ -23,6 +24,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(cookieParser());
 
 // Routes Declaration
+app.use("/api/v1/category", CategoryRouter);
 app.use("/api/v1/product", ProductRouter);
 app.use("/api/v1/users", UserRouter);
 
