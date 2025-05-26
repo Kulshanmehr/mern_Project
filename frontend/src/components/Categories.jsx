@@ -9,10 +9,10 @@ const Categories = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/v1/category/getAllCategories") // use correct endpoint
+      .get("http://localhost:8000/api/v1/category/getAllCategories")
       .then((response) => {
         if (response.data.status) {
-          setCategory(response.data.categories); // assuming backend returns `categories`
+          setCategory(response.data.categories);
         } else {
           setError("Failed to fetch categories.");
         }

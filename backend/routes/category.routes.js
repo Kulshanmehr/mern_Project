@@ -3,6 +3,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 import {
   CreateCategory,
   getAllCategories,
+  getCategoryData,
 } from "../controllers/category.controller.js";
 const router = Router();
 
@@ -15,5 +16,6 @@ router.post(
   CreateCategory,
 );
 router.get("/getAllCategories", getAllCategories);
+router.get("/getCategoryProducts/:id", getCategoryData);
 
 export default router;

@@ -10,7 +10,7 @@ const AddProduct = async (req, res) => {
       productPrice,
       productCost,
       productHeading,
-      productCategory,
+      productCategory_id,
     } = req.body;
 
     console.log(req.files);
@@ -54,7 +54,7 @@ const AddProduct = async (req, res) => {
       shortDescription,
       productPrice,
       productCost,
-      productCategory,
+      productCategory_id,
       product_thumb_image: thumb_image.filename,
       productBanner: productBanner.filename,
       productImages: productImages.map((img) => img.filename),
