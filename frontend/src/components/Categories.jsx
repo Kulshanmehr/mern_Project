@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Categories.css";
 
@@ -41,7 +42,9 @@ const Categories = () => {
               />
               <h3>{cat.categoryName}</h3>
               <p>{cat.shortDescription}</p>
-              <button className="explore-button">Explore</button>
+              <Link to={`/categories/${cat._id}`} className="explore-button">
+                Explore
+              </Link>
             </div>
           ))}
         </div>

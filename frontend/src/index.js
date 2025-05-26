@@ -10,6 +10,7 @@ import Services from "./pages/Dashboard/Services";
 import Projects from "./pages/Dashboard/Products.jsx";
 import Product from "./pages/Product.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
+import CategoryDetails from "./pages/CategoryDetails.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Home />} />
         <Route path="/" element={<App />} />
         <Route path="/categoryList" element={<CategoryPage />} />
+        <Route path="/categories/:id" element={<CategoryDetails />} />
         <Route path="/products" element={<Product />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="dashboard">

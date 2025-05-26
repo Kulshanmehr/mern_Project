@@ -1,5 +1,7 @@
 import { Category } from "../models/Category.models.js";
 import Product from "../models/product.model.js";
+const fs = require("fs");
+const path = require("path");
 
 const CreateCategory = async function (req, res) {
   try {
@@ -42,6 +44,77 @@ const CreateCategory = async function (req, res) {
     });
   }
 };
+const fs = require("fs");
+const path = require("path");
+
+const updateCategory = async (req, res) => {
+  const categoryId = req.params.id;
+
+  try {
+    const { categoryName, description, shortDescription, status } = req.body;
+
+    // Find the existing category
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      return res.status(404).json({
+        status: false,
+        message: "Category not found",
+      });
+    }
+
+    // Handle file uploads
+    const newThumb = req?.files?.category_thumb_image?.[0];
+    const newBanner = req?.files?.categoryBanner?.[0];
+
+    // Paths to delete old images if new ones are uploaded
+    const oldThumbPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "category",
+      category.category_thumb_image,
+    );
+    const oldBannerPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "category",
+      category.categoryBanner,
+    );
+
+    // Update fields
+    category.categoryName = categoryName || category.categoryName;
+    category.description = description || category.description;
+    category.shortDescription = shortDescription || category.shortDescription;
+    category.status = status !== undefined ? status : category.status;
+
+    // Update and delete old thumb image if new one is uploaded
+    if (newThumb) {
+      if (fs.existsSync(oldThumbPath)) fs.unlinkSync(oldThumbPath);
+      category.category_thumb_image = newThumb.filename;
+    }
+
+    // Update and delete old banner image if new one is uploaded
+    if (newBanner) {
+      if (fs.existsSync(oldBannerPath)) fs.unlinkSync(oldBannerPath);
+      category.categoryBanner = newBanner.filename;
+    }
+
+    await category.save();
+
+    return res.status(200).json({
+      status: true,
+      message: "Category updated successfully",
+      category,
+    });
+  } catch (error) {
+    console.error("Update error:", error);
+    return res.status(500).json({
+      status: false,
+      message: `Internal Server Error: ${error.message}`,
+    });
+  }
+};
 
 const getAllCategories = async function (req, res) {
   try {
@@ -63,13 +136,13 @@ const getCategoryData = async function (req, res) {
   const categoryId = req.params.id;
   try {
     const category = await Category.findById(categoryId);
-    console.log(category);
+    // console.log(category);
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
 
     const products = await Product.find({
-      productCategory_id: "682f76db465259ed448d8670",
+      productCategory_id: categoryId,
     });
 
     return res.json({
@@ -82,4 +155,52 @@ const getCategoryData = async function (req, res) {
   }
 };
 
-export { CreateCategory, getAllCategories, getCategoryData };
+const deleteCategoryData = async (req, res) => {
+  const categoryId = req.params.id;
+
+  try {
+    const categoryData = await Category.findById(categoryId);
+
+    if (!categoryData) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const bannerPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "category",
+      categoryData.categoryBanner,
+    );
+    const thumbPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "category",
+      categoryData.category_thumb_image,
+    );
+
+    // Delete files if they exist
+    [bannerPath, thumbPath].forEach((filePath) => {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
+
+    await Category.findByIdAndDelete(categoryId);
+
+    return res
+      .status(200)
+      .json({ message: "Category and images deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export {
+  CreateCategory,
+  getAllCategories,
+  getCategoryData,
+  deleteCategoryData,
+};

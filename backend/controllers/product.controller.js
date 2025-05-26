@@ -1,4 +1,6 @@
 import Product from "../models/product.model.js";
+const fs = require("fs");
+const path = require("path");
 
 const AddProduct = async (req, res) => {
   try {
@@ -102,4 +104,64 @@ const getProductById = async (req, res) => {
   }
 };
 
-export { AddProduct, getAllProducts, getProductById };
+const deleteProductData = async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    const productData = await Product.findById(productId);
+
+    if (!productData) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Construct file paths
+    const bannerPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "products",
+      productData.productBanner,
+    );
+    const thumbPath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      "products",
+      productData.product_thumb_image,
+    );
+
+    // productImages is assumed to be an array of image filenames
+    const imagePaths = (productData.productImages || []).map((filename) =>
+      path.join(__dirname, "..", "uploads", "products", filename),
+    );
+
+    // Delete banner
+    if (productData.productBanner && fs.existsSync(bannerPath)) {
+      fs.unlinkSync(bannerPath);
+    }
+
+    // Delete thumb
+    if (productData.product_thumb_image && fs.existsSync(thumbPath)) {
+      fs.unlinkSync(thumbPath);
+    }
+
+    // Delete each product image
+    imagePaths.forEach((imgPath) => {
+      if (fs.existsSync(imgPath)) {
+        fs.unlinkSync(imgPath);
+      }
+    });
+
+    // Delete product from DB
+    await Product.findByIdAndDelete(productId);
+
+    return res
+      .status(200)
+      .json({ message: "Product and all images deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export { AddProduct, getAllProducts, getProductById, deleteProductData };
