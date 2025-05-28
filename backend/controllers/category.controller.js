@@ -1,7 +1,7 @@
 import { Category } from "../models/Category.models.js";
 import Product from "../models/product.model.js";
-const fs = require("fs");
-const path = require("path");
+import path from "path";
+import fs from "fs";
 
 const CreateCategory = async function (req, res) {
   try {
@@ -44,8 +44,6 @@ const CreateCategory = async function (req, res) {
     });
   }
 };
-const fs = require("fs");
-const path = require("path");
 
 const updateCategory = async (req, res) => {
   const categoryId = req.params.id;

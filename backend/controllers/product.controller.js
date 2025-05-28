@@ -1,6 +1,6 @@
 import Product from "../models/product.model.js";
-const fs = require("fs");
-const path = require("path");
+import path from "path";
+import fs from "fs";
 
 const AddProduct = async (req, res) => {
   try {
